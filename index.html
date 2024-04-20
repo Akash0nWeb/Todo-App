@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+  <link rel="icon" href="./assects/icons8-black-jaguar-16.png" type="image/x-icon">
+  <style>
+    body {
+      background-color: antiquewhite;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      margin-top: 100px;
+      
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .input-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr auto;
+      gap: 10px;
+     
+    }
+
+    .input-container input,
+    .input-container button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .todo-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .todo-item {
+      text-transform: capitalize;
+      font-family: cursive;
+      color: purple;
+      display: grid;
+      grid-template-columns: 2fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .add-button {
+      background-color: rgb(113, 241, 113);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .delete-button {
+      font-size: medium;
+      background-color: rgb(240, 44, 44);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .js-showalert {
+      font-family: cursive;
+      padding: 7px,7px;
+      background-color: #f7695f; /* Red */
+      color: white;
+      border-radius: 5px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="js-showALERT"></div>
+    <h2>Todo App</h2>
+    <div class="input-container">
+      <input placeholder=" Enter a Todo" class="js-todos" onkeydown="if(event.key==='Enter'){addtodo()}" >
+      <input type="date" class="js-date" onkeydown="if(event.key==='Enter'){addtodo()}">
+      <button class="add-button" onclick="addtodo()">ADD</button>
+    </div>
+
+    <div class="js-showtodos todo-list"></div>
+    
+  </div>
+
+  <script>
+    // Load todos from local storage or use an empty array if there are none
+    let todolist = JSON.parse(localStorage.getItem('todolist')) || [];
+
+    function addtodo() {
+      let userdate = document.querySelector('.js-date').value
+      let usertodo = document.querySelector('.js-todos').value
+      if (usertodo==='a' || usertodo==='A'){
+        todolist.push({ todo: 'i am akash', date: '16-09-2000' })
+        document.querySelector('.js-todos').value = ''
+        document.querySelector(".js-showALERT").innerHTML = ''
+        saveTodosToLocalStorage(); // Save todos to local storage
+        rendertodos()
+      }
+      if (usertodo.length > 2 && userdate.length > 2) {
+        todolist.push({ todo: usertodo, date: userdate })
+        document.querySelector('.js-todos').value = ''
+        document.querySelector(".js-showALERT").innerHTML = ''
+        saveTodosToLocalStorage(); // Save todos to local storage
+        rendertodos()
+      } else {
+        document.querySelector(".js-showALERT").innerHTML = "<div class='js-showalert'><p>* Please Enter a Todo and Due Date !</p></div>";
+      }
+    }
+
+    function rendertodos() {
+      let htmloftodoObjects = ''
+      for (let i = 0; i < todolist.length; i++) { // Changed loop starting index to 0
+
+        let showtodo = todolist[i].todo
+        let showdate = todolist[i].date
+        let htmloftodoObject = `<div class="todo-item"><span>${showtodo}</span><span>${showdate}</span><button class="delete-button" onclick="deletetodo(${i})">Delete</button></div>`
+
+        htmloftodoObjects += htmloftodoObject
+      }
+
+      document.querySelector('.js-showtodos').innerHTML = htmloftodoObjects
+    }
+
+    function deletetodo(index) {
+      todolist.splice(index, 1)
+      saveTodosToLocalStorage(); // Save todos to local storage
+      rendertodos()
+    }
+
+    function saveTodosToLocalStorage() {
+      localStorage.setItem('todolist', JSON.stringify(todolist));
+    }
+
+    // Initial rendering of todos when the page loads
+    rendertodos();
+  </script>
+</body>
+</html>
