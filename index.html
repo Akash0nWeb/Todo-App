@@ -110,7 +110,7 @@
         saveTodosToLocalStorage(); // Save todos to local storage
         rendertodos()
       }
-      if (usertodo.length > 2 && userdate.length > 2) {
+      else if (usertodo.length > 2 && userdate.length > 2) {
         todolist.push({ todo: usertodo, date: userdate })
         document.querySelector('.js-todos').value = ''
         document.querySelector(".js-showALERT").innerHTML = ''
